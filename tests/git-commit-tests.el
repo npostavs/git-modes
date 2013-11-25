@@ -64,3 +64,46 @@
      (insert "\n\n#comment")
      (git-commit-prev-message 1)
      (should (equal (buffer-string) "msg three\n\n#comment")))))
+
+(ert-deftest git-commit-message-back ()
+  "`git-commit-prev-message' should always go to previous message."
+  (git-commit-with-temp-message-history
+   (setq log-edit-comment-ring-index 0)
+   (insert "current message\n\n")
+   (git-commit-prev-message 1)
+   (should (equal (buffer-string) "msg three\n\n"))))
+
+(ert-deftest git-commit-message-back-nil-index ()
+  "`git-commit-prev-message' should always go to previous message.
+
+Even when `log-edit-comment-ring-index' is still nil."
+  (git-commit-with-temp-message-history
+   (insert "current message\n\n")
+   (git-commit-prev-message 1)
+   (should (equal (buffer-string) "msg three\n\n"))))
+
+(ert-deftest git-commit-message-next ()
+  "`git-commit-next-message' should always go to next message."
+  (git-commit-with-temp-message-history
+   (setq log-edit-comment-ring-index 0)
+   (insert "current message\n\n")
+   (git-commit-next-message 1)
+   (should (equal (buffer-string) "msg one\n\n"))))
+
+(ert-deftest git-commit-message-next-nil-index ()
+  "`git-commit-next-message' should always go to next message.
+
+Even when `log-edit-comment-ring-index' is still nil."
+  (git-commit-with-temp-message-history
+   (insert "current message\n\n")
+   (git-commit-next-message 1)
+   (should (equal (buffer-string) "msg one\n\n"))))
+
+(ert-deftest git-commit-message-back-and-forth ()
+  "`git-commit-next-message' should be the inverse of `git-commit-prev-message'.
+
+Even when the starting message is empty."
+  (git-commit-with-temp-message-history
+   (git-commit-prev-message 1)
+   (git-commit-next-message 1)
+   (should (equal (buffer-string) ""))))
