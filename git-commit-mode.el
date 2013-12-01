@@ -319,10 +319,7 @@ The commit message is saved to the kill ring."
   (let ((message (buffer-substring
                   (point-min)
                   (git-commit-find-pseudo-header-position))))
-    (when (and (string-match "^\\s-*\\sw" message)
-               (or (ring-empty-p log-edit-comment-ring)
-                   (not (ring-member log-edit-comment-ring message))))
-      (ring-insert log-edit-comment-ring message))))
+    (ring-remove+insert+extend log-edit-comment-ring message)))
 
 (defun git-commit-prev-message (arg)
   "Cycle backward through message history, after saving current message.
