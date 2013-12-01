@@ -329,6 +329,9 @@ The commit message is saved to the kill ring."
 With a numeric prefix ARG, go back ARG comments."
   (interactive "*p")
   (git-commit-save-message)
+  ;; if index is nil, we end up cycling back to message we just saved!
+  (unless log-edit-comment-ring-index
+    (setq log-edit-comment-ring-index 0))
   (save-restriction
     (narrow-to-region (point-min) (git-commit-find-pseudo-header-position))
     (log-edit-previous-comment arg)))
