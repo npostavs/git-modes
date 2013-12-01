@@ -51,33 +51,22 @@
 
 (ert-deftest git-commit-message-history-leave-comments ()
   "History cycling commands should not affect comments"
-  (flet ((git-commit-save-message () nil)) ;ignore issue #75
-    (git-commit-with-temp-message-history
-     (insert "current msg\n\n#comment")
-     (git-commit-prev-message 1)
-     (should (equal (buffer-string) "msg three\n\n#comment")))))
+  (git-commit-with-temp-message-history
+   (insert "current msg\n\n#comment")
+   (git-commit-prev-message 1)
+   (should (equal (buffer-string) "msg three\n\n#comment"))))
 
 (ert-deftest git-commit-message-history-leave-comments-empty ()
   "History cycling commands should not affect comments, start from empty message."
-  (flet ((git-commit-save-message () nil)) ;ignore issue #75
-    (git-commit-with-temp-message-history
-     (insert "\n\n#comment")
-     (git-commit-prev-message 1)
-     (should (equal (buffer-string) "msg three\n\n#comment")))))
+  (git-commit-with-temp-message-history
+   (insert "\n\n#comment")
+   (git-commit-prev-message 1)
+   (should (equal (buffer-string) "msg three\n\n#comment"))))
 
 (ert-deftest git-commit-message-back ()
   "`git-commit-prev-message' should always go to previous message."
   (git-commit-with-temp-message-history
    (setq log-edit-comment-ring-index 0)
-   (insert "current message\n\n")
-   (git-commit-prev-message 1)
-   (should (equal (buffer-string) "msg three\n\n"))))
-
-(ert-deftest git-commit-message-back-nil-index ()
-  "`git-commit-prev-message' should always go to previous message.
-
-Even when `log-edit-comment-ring-index' is still nil."
-  (git-commit-with-temp-message-history
    (insert "current message\n\n")
    (git-commit-prev-message 1)
    (should (equal (buffer-string) "msg three\n\n"))))
